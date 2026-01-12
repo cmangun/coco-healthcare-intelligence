@@ -1,0 +1,216 @@
+version: "3.9"
+
+# CoCo: Careware for Healthcare Intelligence
+# Full-stack local deployment with all 10 integrated services
+
+services:
+  # ============================================================================
+  # CORE API GATEWAY
+  # ============================================================================
+  coco-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: coco-api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - LOG_LEVEL=INFO
+      - DATABASE_URL=postgresql://coco:coco@postgres:5432/coco
+      - REDIS_URL=redis://redis:6379/0
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - PROMETHEUS_MULTIPROC_DIR=/tmp/prometheus
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./coco:/app/coco
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=api-gateway"
+      - "com.coco.phase=10-production"
+
+  # ============================================================================
+  # DATA LAYER
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: coco-postgres
+    environment:
+      - POSTGRES_USER=coco
+      - POSTGRES_PASSWORD=coco
+      - POSTGRES_DB=coco
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coco"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=database"
+      - "com.coco.phase=05-integration"
+
+  redis:
+    image: redis:7-alpine
+    container_name: coco-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=cache"
+      - "com.coco.phase=05-integration"
+
+  # ============================================================================
+  # OBSERVABILITY STACK
+  # ============================================================================
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: coco-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=metrics"
+      - "com.coco.phase=11-reliability"
+
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: coco-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=coco
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=dashboards"
+      - "com.coco.phase=11-reliability"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.52
+    container_name: coco-jaeger
+    ports:
+      - "16686:16686"  # UI
+      - "4317:4317"    # OTLP gRPC
+      - "4318:4318"    # OTLP HTTP
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=tracing"
+      - "com.coco.phase=11-reliability"
+
+  # ============================================================================
+  # ML OPERATIONS
+  # ============================================================================
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.9.2
+    container_name: coco-mlflow
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=postgresql://coco:coco@postgres:5432/mlflow
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlflow/artifacts
+    volumes:
+      - mlflow_data:/mlflow/artifacts
+    command: >
+      mlflow server
+      --host 0.0.0.0
+      --port 5000
+      --backend-store-uri postgresql://coco:coco@postgres:5432/mlflow
+      --default-artifact-root /mlflow/artifacts
+    depends_on:
+      - postgres
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=model-registry"
+      - "com.coco.phase=06-build"
+
+  # ============================================================================
+  # VECTOR DATABASE (for RAG)
+  # ============================================================================
+  qdrant:
+    image: qdrant/qdrant:v1.7.4
+    container_name: coco-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=vector-db"
+      - "com.coco.phase=06-build"
+
+  # ============================================================================
+  # FEATURE STORE
+  # ============================================================================
+  feast:
+    image: feastdev/feature-server:0.36.0
+    container_name: coco-feast
+    ports:
+      - "6566:6566"
+    environment:
+      - FEAST_USAGE=false
+    volumes:
+      - ./config/feast:/feast:ro
+    networks:
+      - coco-network
+    labels:
+      - "com.coco.component=feature-store"
+      - "com.coco.phase=04-alignment"
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  mlflow_data:
+  qdrant_data:
+
+networks:
+  coco-network:
+    driver: bridge
+    name: coco-network
