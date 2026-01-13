@@ -1,0 +1,378 @@
+{
+  "name": "CoCo Healthcare AI Repository Evaluation",
+  "version": "1.0.0",
+  "description": "Structured evaluation for Healthcare AI FDE portfolio repository",
+  "target_score": 100,
+  "max_score": 105,
+  "sections": [
+    {
+      "id": "structure",
+      "name": "Repository Structure",
+      "max_points": 10,
+      "checks": [
+        {
+          "id": "core_files",
+          "name": "Core Files Exist",
+          "max_points": 5,
+          "type": "existence",
+          "items": [
+            {"path": "README.md", "points": 1},
+            {"path": "RUNBOOK.md", "points": 1},
+            {"path": "SECURITY.md", "points": 1},
+            {"path": "THREAT_MODEL.md", "points": 1},
+            {"path": "docker-compose.yml", "points": 1}
+          ]
+        },
+        {
+          "id": "directories",
+          "name": "Directory Structure",
+          "max_points": 5,
+          "type": "directory",
+          "items": [
+            {"path": ".github/workflows", "required_pattern": "*.yml", "min_count": 1, "points": 1},
+            {"path": "coco/api", "required_pattern": "*.py", "min_count": 2, "points": 1},
+            {"path": "coco/governance", "required_pattern": "*.py", "min_count": 2, "points": 1},
+            {"path": "coco/workflows", "required_pattern": "*.py", "min_count": 3, "points": 1},
+            {"path": "tests", "required_pattern": "*.py", "min_count": 2, "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "clinical_workflows",
+      "name": "Clinical Workflows",
+      "max_points": 15,
+      "checks": [
+        {
+          "id": "care_gaps",
+          "name": "Care Gap Detection",
+          "file": "coco/workflows/care_gap_workflow.py",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "clinical_guidelines", "search_terms": ["USPSTF", "HEDIS", "ACIP", "guideline"], "points": 1},
+            {"name": "typed_models", "search_terms": ["BaseModel", "class.*Input", "class.*Output", ": str", ": int"], "points": 1},
+            {"name": "audit_logging", "search_terms": ["audit", "log", "record"], "points": 1},
+            {"name": "docstring", "search_terms": ["\"\"\"", "'''"], "points": 1}
+          ]
+        },
+        {
+          "id": "readmission",
+          "name": "Readmission Risk",
+          "file": "coco/workflows/readmission_workflow.py",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "risk_score", "search_terms": ["risk_score", "score", "probability"], "points": 1},
+            {"name": "contributing_factors", "search_terms": ["factor", "shap", "contribution", "feature"], "points": 1},
+            {"name": "model_version", "search_terms": ["version", "model_id", "model_version"], "points": 1},
+            {"name": "confidence", "search_terms": ["confidence", "interval", "uncertainty", "lower", "upper"], "points": 1}
+          ]
+        },
+        {
+          "id": "summarization",
+          "name": "Clinical Summarization",
+          "file": "coco/workflows/summarization_workflow.py",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "rag_pattern", "search_terms": ["retriev", "vector", "embed", "search"], "points": 1},
+            {"name": "citations", "search_terms": ["citation", "source", "reference", "document"], "points": 1},
+            {"name": "phi_detection", "search_terms": ["phi", "pii", "redact", "filter", "detect"], "points": 1},
+            {"name": "hallucination", "search_terms": ["hallucination", "ground", "verify", "factual"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "governance",
+      "name": "Governance Framework",
+      "max_points": 15,
+      "checks": [
+        {
+          "id": "phase_gates",
+          "name": "Phase Gates",
+          "file": "coco/governance/phase_gates.py",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "multiple_phases", "search_terms": ["phase", "stage", "gate"], "min_occurrences": 8, "points": 1},
+            {"name": "exit_criteria", "search_terms": ["exit", "criteria", "requirement", "condition"], "points": 1},
+            {"name": "kill_criteria", "search_terms": ["kill", "abort", "stop", "terminate"], "points": 1},
+            {"name": "owner", "search_terms": ["owner", "responsible", "accountable"], "points": 1}
+          ]
+        },
+        {
+          "id": "cost_telemetry",
+          "name": "Cost Telemetry",
+          "file": "coco/governance/cost_telemetry.py",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "cost_tracking", "search_terms": ["cost", "price", "spend"], "points": 1},
+            {"name": "ceiling", "search_terms": ["ceiling", "threshold", "limit", "max"], "points": 1},
+            {"name": "roi", "search_terms": ["roi", "return", "value", "benefit"], "points": 1},
+            {"name": "metrics_export", "search_terms": ["metric", "gauge", "counter", "prometheus"], "points": 1}
+          ]
+        },
+        {
+          "id": "audit_logger",
+          "name": "Audit Logging",
+          "file": "coco/governance/audit_logger.py",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "hash_chain", "search_terms": ["hash", "chain", "previous", "sha"], "points": 1},
+            {"name": "phi_access", "search_terms": ["access", "phi", "reason", "justification"], "points": 1},
+            {"name": "immutable", "search_terms": ["immutable", "append", "only", "insert"], "points": 1},
+            {"name": "verification", "search_terms": ["verify", "validate", "integrity", "check"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "regulatory",
+      "name": "Regulatory Documentation",
+      "max_points": 15,
+      "checks": [
+        {
+          "id": "hipaa_mapping",
+          "name": "HIPAA Mapping",
+          "file": "regulatory/hipaa-mapping.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "cfr_citations", "search_terms": ["164.312", "§164", "CFR"], "points": 1},
+            {"name": "table_structure", "search_terms": ["|", "Control", "Implementation", "Evidence"], "points": 1},
+            {"name": "code_links", "search_terms": ["coco/", ".py", "file"], "points": 1},
+            {"name": "five_safeguards", "search_terms": ["Access", "Audit", "Integrity", "Authentication", "Transmission"], "min_occurrences": 5, "points": 1}
+          ]
+        },
+        {
+          "id": "fda_change_control",
+          "name": "FDA Change Control",
+          "file": "regulatory/fda-ml-change-control.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "fda_guidance", "search_terms": ["FDA", "SaMD", "PCCP", "guidance"], "points": 1},
+            {"name": "change_categories", "search_terms": ["allowed", "excluded", "covered", "category"], "points": 1},
+            {"name": "validation", "search_terms": ["validation", "testing", "verification"], "points": 1},
+            {"name": "rollback", "search_terms": ["rollback", "revert", "previous", "restore"], "points": 1}
+          ]
+        },
+        {
+          "id": "audit_evidence",
+          "name": "Audit Evidence Index",
+          "file": "regulatory/audit-evidence-index.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "control_domains", "search_terms": ["Access Control", "Audit", "Integrity", "domain"], "points": 1},
+            {"name": "evidence_links", "search_terms": ["test", "log", "config", "path"], "points": 1},
+            {"name": "audit_types", "search_terms": ["HIPAA", "FDA", "SOC"], "min_occurrences": 2, "points": 1},
+            {"name": "retention", "search_terms": ["retention", "years", "period"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "operations",
+      "name": "Operational Readiness",
+      "max_points": 15,
+      "checks": [
+        {
+          "id": "runbook",
+          "name": "Runbook",
+          "file": "RUNBOOK.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "start_stop", "search_terms": ["start", "stop", "shutdown", "boot"], "points": 1},
+            {"name": "debugging", "search_terms": ["debug", "troubleshoot", "diagnose"], "points": 1},
+            {"name": "severity", "search_terms": ["P1", "P2", "severity", "critical", "escalat"], "points": 1},
+            {"name": "anti_patterns", "search_terms": ["not", "never", "don't", "forbidden"], "points": 1}
+          ]
+        },
+        {
+          "id": "demo_script",
+          "name": "Demo Script",
+          "file": "scripts/demo.sh",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "starts_services", "search_terms": ["docker", "compose", "up"], "points": 1},
+            {"name": "runs_workflows", "search_terms": ["care-gap", "readmission", "summar"], "min_occurrences": 3, "points": 1},
+            {"name": "json_output", "search_terms": ["curl", "json", "response"], "points": 1},
+            {"name": "status_indicators", "search_terms": ["SUCCESS", "ERROR", "✓", "✗", "green", "red"], "points": 1}
+          ]
+        },
+        {
+          "id": "demo_walkthrough",
+          "name": "Demo Walkthrough",
+          "file": "docs/DEMO_WALKTHROUGH.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "expected_json", "search_terms": ["```json", "patient_id", "risk_score"], "points": 1},
+            {"name": "success_criteria", "search_terms": ["success", "expected", "should"], "points": 1},
+            {"name": "failure_modes", "search_terms": ["fail", "error", "troubleshoot"], "points": 1},
+            {"name": "verification", "search_terms": ["curl", "verify", "check", "test"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "max_points": 10,
+      "checks": [
+        {
+          "id": "security_policy",
+          "name": "Security Policy",
+          "file": "SECURITY.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "reporting", "search_terms": ["report", "vulnerab", "disclose"], "points": 1},
+            {"name": "severity_levels", "search_terms": ["critical", "high", "medium", "low"], "points": 1},
+            {"name": "response_time", "search_terms": ["hour", "day", "response", "SLA"], "points": 1},
+            {"name": "controls", "search_terms": ["control", "encryption", "auth", "access"], "points": 1}
+          ]
+        },
+        {
+          "id": "threat_model",
+          "name": "Threat Model",
+          "file": "THREAT_MODEL.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "stride", "search_terms": ["Spoofing", "Tampering", "Repudiation", "Information", "Denial", "Elevation"], "min_occurrences": 4, "points": 1},
+            {"name": "threat_table", "search_terms": ["|", "Threat", "Mitigation"], "points": 1},
+            {"name": "top_threats", "search_terms": ["top", "priorit", "rank", "critical"], "points": 1},
+            {"name": "trust_boundaries", "search_terms": ["trust", "boundary", "zone"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evaluation",
+      "name": "Evaluation & Metrics",
+      "max_points": 10,
+      "checks": [
+        {
+          "id": "eval_methodology",
+          "name": "Evaluation Methodology",
+          "file": "docs/EVALUATION.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "synthetic_label", "search_terms": ["synthetic", "simulated", "generated"], "points": 1},
+            {"name": "metrics", "search_terms": ["AUC", "precision", "recall", "accuracy"], "points": 1},
+            {"name": "limitations", "search_terms": ["limitation", "caveat", "constraint"], "points": 1},
+            {"name": "reproducibility", "search_terms": ["reproduce", "script", "run", "command"], "points": 1}
+          ]
+        },
+        {
+          "id": "readme_outcomes",
+          "name": "README Measured Outcomes",
+          "file": "README.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "outcomes_section", "search_terms": ["Measured Outcomes", "Outcome", "Result"], "points": 1},
+            {"name": "all_workflows", "search_terms": ["Care Gap", "Readmission", "Summarization"], "min_occurrences": 3, "points": 1},
+            {"name": "data_source_label", "search_terms": ["Synthetic", "Benchmark", "simulated"], "points": 1},
+            {"name": "caveats", "search_terms": ["will vary", "synthetic", "production"], "points": 1},
+            {"name": "eval_link", "search_terms": ["EVALUATION.md", "evaluation", "methodology"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "incidents",
+      "name": "Incident Response",
+      "max_points": 5,
+      "checks": [
+        {
+          "id": "postmortem",
+          "name": "Postmortem",
+          "file": "postmortems/2024-llm-hallucination-event.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "timeline", "search_terms": ["timeline", ":", "UTC", "discovered"], "points": 1},
+            {"name": "root_cause", "search_terms": ["root cause", "why", "because"], "points": 1},
+            {"name": "fix", "search_terms": ["fix", "remediation", "prevention", "implemented"], "points": 1},
+            {"name": "signoff", "search_terms": ["sign", "review", "approved", "Lead", "Officer"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cicd",
+      "name": "CI/CD",
+      "max_points": 5,
+      "checks": [
+        {
+          "id": "github_actions",
+          "name": "GitHub Actions",
+          "file": ".github/workflows/ci.yml",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "linting", "search_terms": ["lint", "ruff", "eslint", "flake"], "points": 1},
+            {"name": "tests", "search_terms": ["pytest", "test", "vitest"], "points": 1},
+            {"name": "security", "search_terms": ["security", "scan", "audit", "dependency"], "points": 1},
+            {"name": "docker", "search_terms": ["docker", "build", "image"], "points": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thought_leadership",
+      "name": "Thought Leadership (Bonus)",
+      "max_points": 5,
+      "is_bonus": true,
+      "checks": [
+        {
+          "id": "position_paper",
+          "name": "Position Paper",
+          "file": "docs/WHY_THIS_EXISTS.md",
+          "max_points": 5,
+          "type": "content",
+          "criteria": [
+            {"name": "file_exists", "points": 1},
+            {"name": "problems", "search_terms": ["problem", "fail", "missing", "gap"], "points": 1},
+            {"name": "proof", "search_terms": ["prove", "demonstrate", "shows"], "points": 1},
+            {"name": "audiences", "search_terms": ["executive", "engineer", "platform", "leader"], "points": 1},
+            {"name": "thesis", "search_terms": ["Most healthcare AI", "systems", "delivery"], "points": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "exceptional": {"min": 95, "max": 105, "description": "Production-ready, reference implementation"},
+    "strong": {"min": 85, "max": 94, "description": "Minor gaps, ready for most reviews"},
+    "adequate": {"min": 70, "max": 84, "description": "Significant gaps, needs improvement"},
+    "insufficient": {"min": 0, "max": 69, "description": "Major gaps, not ready for review"}
+  }
+}

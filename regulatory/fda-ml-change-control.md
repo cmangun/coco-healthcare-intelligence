@@ -149,6 +149,34 @@ Change Request
 
 ## Model Version Control
 
+### Rollback Procedure
+
+If a model change causes performance degradation or safety issues, immediate rollback is required:
+
+| Trigger | Action | Timeline |
+|---------|--------|----------|
+| Performance below threshold | Automatic rollback to previous version | Immediate |
+| Safety signal detected | Manual rollback + investigation | < 4 hours |
+| Fairness degradation | Rollback + bias analysis | < 24 hours |
+| User-reported issue | Triage + potential rollback | < 48 hours |
+
+**Rollback Steps:**
+1. **Detect**: Monitoring alerts or user reports trigger investigation
+2. **Assess**: Confirm issue is model-related (not data or infrastructure)
+3. **Revert**: Deploy previous known-good model version from MLflow Registry
+4. **Verify**: Confirm rollback successful via health checks
+5. **Document**: Create incident report with root cause analysis
+6. **Prevent**: Update test suite to catch similar issues
+
+**Rollback Commands:**
+```bash
+# Automatic rollback (triggered by monitoring)
+coco model rollback --to-version <previous_version> --reason "performance_regression"
+
+# Manual rollback (operator-initiated)
+coco model rollback --to-version <version> --reason "safety_concern" --operator <name>
+```
+
 ### Versioning Scheme
 
 ```
