@@ -10,6 +10,21 @@
 
 ---
 
+## 90-Second Reviewer Tour
+
+| Step | Action | What You'll See |
+|------|--------|-----------------|
+| 1 | `./scripts/demo.sh` | All 3 clinical workflows execute end-to-end |
+| 2 | Open http://localhost:3000 | Grafana dashboards: latency, cost, model drift |
+| 3 | `curl localhost:8000/api/v1/care-gaps/patient/P12345678` | JSON response with gaps, citations, audit_id |
+| 4 | Read [`regulatory/hipaa-mapping.md`](regulatory/hipaa-mapping.md) | Safeguard → Control → Code → Evidence |
+| 5 | Read [`docs/EVALUATION.md`](docs/EVALUATION.md) | Metrics, methodology, limitations |
+| 6 | Read [`postmortems/2024-llm-hallucination-event.md`](postmortems/2024-llm-hallucination-event.md) | Real incident with 5-whys and code fixes |
+
+**Time to verify: < 90 seconds.**
+
+---
+
 ## What This Is
 
 CoCo is an **end-to-end healthcare AI platform** demonstrating the complete Forward Deployed Engineering lifecycle—from data ingestion through production operations. It is designed for regulated environments with HIPAA compliance, FDA validation readiness, and enterprise governance baked in.
