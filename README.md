@@ -230,10 +230,12 @@ Models that don't prove value get killed. These are the triggers:
 
 | Document | Purpose |
 |----------|---------|
+| [WHY_THIS_EXISTS.md](docs/WHY_THIS_EXISTS.md) | Why most healthcare AI fails—and what we changed |
 | [RUNBOOK.md](RUNBOOK.md) | How to start, stop, debug, and escalate |
 | [PLAYBOOK_MAPPING.md](docs/PLAYBOOK_MAPPING.md) | 12-phase FDE alignment |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and data flows |
 | [DEPLOYMENT_AZURE.md](docs/DEPLOYMENT_AZURE.md) | Azure AKS deployment guide |
+| [EVALUATION.md](docs/EVALUATION.md) | Metrics, methodology, limitations |
 | [hipaa-mapping.md](regulatory/hipaa-mapping.md) | HIPAA control mapping |
 | [fda-ml-change-control.md](regulatory/fda-ml-change-control.md) | FDA PCCP framework |
 | [audit-evidence-index.md](regulatory/audit-evidence-index.md) | Audit evidence locations |
