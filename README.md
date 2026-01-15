@@ -6,11 +6,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![HIPAA Compliant](https://img.shields.io/badge/HIPAA-Compliant-green.svg)](#compliance)
 
-**Enterprise agentic AI system for healthcare document intelligence with multi-agent orchestration, HIPAA compliance, and full audit capabilities.**
+Enterprise agentic AI system for healthcare document intelligence with multi-agent orchestration, HIPAA compliance, and full audit capabilities.
 
 *Inspired by production deployments in pharmaceutical R&D and regulatory affairs.*
 
-## 🎯 Business Impact
+## Business Impact
 
 | Metric | Improvement | How |
 |--------|-------------|-----|
@@ -21,7 +21,7 @@
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart TB
@@ -75,28 +75,28 @@ flowchart TB
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 🤖 Multi-Agent Architecture
+### Multi-Agent Architecture
 - **Document Agent**: Intelligent extraction and classification
 - **QA Agent**: Cross-reference verification
 - **Compliance Agent**: Regulatory requirement checking
 - **Synthesis Agent**: Insight generation and summarization
 - Configurable agent workflows via LangGraph
 
-### 📄 Document Intelligence
+### Document Intelligence
 - Multi-format support (PDF, DOCX, HL7, CDA, FHIR)
 - Table and figure extraction
 - Cross-document entity resolution
 - Version diff and change tracking
 
-### 🛡️ Enterprise Compliance
+### Enterprise Compliance
 - HIPAA Safe Harbor PHI detection
 - FDA 21 CFR Part 11 audit trails
 - SOC 2 Type II controls
 - GxP validation support
 
-### ⚡ Production Features
+### Production Features
 - Async processing with task queues
 - Horizontal scaling support
 - Cost attribution and budgeting
@@ -104,7 +104,7 @@ flowchart TB
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.11+
@@ -142,7 +142,7 @@ celery -A src.workers worker --loglevel=info
 
 ---
 
-## 📖 Usage Examples
+## Usage Examples
 
 ### Process Documents with Agents
 
@@ -213,7 +213,7 @@ for finding in report.findings:
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 coco-healthcare-intelligence/
@@ -244,7 +244,7 @@ coco-healthcare-intelligence/
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -259,19 +259,19 @@ pytest --cov=src --cov-report=html
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ---
 
-## 📜 License
+## License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 👤 Author
+## Author
 
 **Christopher Mangun** - Forward Deployed Engineer  
 - GitHub: [@cmangun](https://github.com/cmangun)
@@ -279,7 +279,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🔗 Related Projects
+## Related Projects
 
 - [healthcare-rag-platform](https://github.com/cmangun/healthcare-rag-platform) - HIPAA-compliant RAG
 - [clinical-nlp-pipeline](https://github.com/cmangun/clinical-nlp-pipeline) - Medical NLP processing
